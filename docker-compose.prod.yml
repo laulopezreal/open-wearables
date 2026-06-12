@@ -31,7 +31,11 @@ services:
       - DB_HOST=db
       - REDIS_HOST=redis
     ports:
-      - "${API_PORT:-8000}:8000"
+      # Localhost for on-host verification; tailnet IP so the getmAIlean dashboard
+      # server reaches the API over WireGuard on plain HTTP (no public TLS edge).
+      # Not 0.0.0.0: the API stays off the public internet, gated by the API key.
+      - "127.0.0.1:${API_PORT:-8001}:8000"
+      - "${TAILNET_BIND:-100.67.182.77}:${API_PORT:-8001}:8000"
     depends_on:
       db:
         condition: service_healthy
