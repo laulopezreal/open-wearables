@@ -64,7 +64,7 @@ def _to_int(value: Any) -> int | None:
         return None
     try:
         return int(float(value))
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return None
 
 
@@ -73,7 +73,7 @@ def _to_float(value: Any) -> float | None:
         return None
     try:
         return float(value)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return None
 
 
@@ -110,7 +110,6 @@ def activity_summary_row_to_garmin_activity(
     device_id = row.get("Device_ID") or device_name
 
     return {
-        "userId": "garmin-grafana-import",
         "activityId": str(activity_id),
         "activityType": str(activity_type).upper(),
         "startTimeInSeconds": int(start.timestamp()),
