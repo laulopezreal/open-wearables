@@ -107,7 +107,12 @@ def activity_summary_row_to_garmin_activity(
         return None
 
     device_name = row.get("Device") or default_device_name
+    # Device_ID arrives from InfluxDB as an int (e.g. 3472575480); EventRecordCreate
+    # requires device_model to be a string, so coerce. Without this the whole
+    # activity is dropped with a pydantic validation error (saved=0).
     device_id = row.get("Device_ID") or device_name
+    if device_id is not None:
+        device_id = str(device_id)
 
     return {
         "activityId": str(activity_id),
