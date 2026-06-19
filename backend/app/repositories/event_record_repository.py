@@ -604,6 +604,12 @@ class EventRecordRepository(
             efficiency_percent = None
             if row.efficiency_duration_sum and row.efficiency_duration_sum > 0:
                 efficiency_percent = float(row.efficiency_weighted_sum) / float(row.efficiency_duration_sum)
+                # Clamp to the schema bound (SleepSummary.efficiency_percent is ge=0, le=100).
+                # A duration-weighted average of per-record efficiencies can land fractionally
+                # above 100 (e.g. 100.07) from rounding in the stored values; efficiency is a
+                # percentage and cannot exceed 100 by definition, so an unclamped value just
+                # fails pydantic validation and 500s the whole sleep summary endpoint.
+                efficiency_percent = max(0.0, min(100.0, efficiency_percent))
 
             summaries.append(
                 {
