@@ -383,12 +383,8 @@ def import_wellness_rows(
         summary.saved["recovery"] = 0
         return summary
 
-    summary.saved["dailies"] = (
-        garmin_247.process_items_batch(db, user_id, "dailies", dailies) if dailies else 0
-    )
-    summary.saved["sleeps"] = (
-        garmin_247.process_items_batch(db, user_id, "sleeps", sleeps) if sleeps else 0
-    )
+    summary.saved["dailies"] = garmin_247.process_items_batch(db, user_id, "dailies", dailies) if dailies else 0
+    summary.saved["sleeps"] = garmin_247.process_items_batch(db, user_id, "sleeps", sleeps) if sleeps else 0
     if recovery_scores:
         health_score_service.bulk_create(db, recovery_scores)
     summary.saved["recovery"] = len(recovery_scores)

@@ -21,12 +21,7 @@ from app.services.providers.garmin.grafana_wellness_import import (
 from tests.factories import UserFactory
 
 WELLNESS_IMPORT_PATH = (
-    Path(__file__).resolve().parents[3]
-    / "app"
-    / "services"
-    / "providers"
-    / "garmin"
-    / "grafana_wellness_import.py"
+    Path(__file__).resolve().parents[3] / "app" / "services" / "providers" / "garmin" / "grafana_wellness_import.py"
 )
 
 
@@ -200,10 +195,7 @@ def test_build_recovery_health_score_uses_consumer_component_keys() -> None:
 
 
 def test_build_recovery_health_score_returns_none_when_no_metrics() -> None:
-    assert (
-        build_recovery_health_score(uuid4(), "2024-01-15", resting_heart_rate=None, hrv_milli=None)
-        is None
-    )
+    assert build_recovery_health_score(uuid4(), "2024-01-15", resting_heart_rate=None, hrv_milli=None) is None
 
 
 def test_build_recovery_scores_joins_rhr_and_hrv_per_day() -> None:
@@ -428,9 +420,7 @@ def test_import_wellness_rows_second_run_saves_zero_for_all_paths(
 
     steps_before = db.query(DataPointSeries).count()
     sleeps_before = db.query(EventRecord).count()
-    recovery_before = (
-        db.query(HealthScore).filter(HealthScore.category == HealthScoreCategory.RECOVERY).count()
-    )
+    recovery_before = db.query(HealthScore).filter(HealthScore.category == HealthScoreCategory.RECOVERY).count()
 
     import_wellness_rows(
         db,
@@ -443,7 +433,4 @@ def test_import_wellness_rows_second_run_saves_zero_for_all_paths(
 
     assert db.query(DataPointSeries).count() == steps_before
     assert db.query(EventRecord).count() == sleeps_before
-    assert (
-        db.query(HealthScore).filter(HealthScore.category == HealthScoreCategory.RECOVERY).count()
-        == recovery_before
-    )
+    assert db.query(HealthScore).filter(HealthScore.category == HealthScoreCategory.RECOVERY).count() == recovery_before
